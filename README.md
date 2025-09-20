@@ -22,10 +22,9 @@ This is a C implementation of the Kermack-McKendrick SIR (Susceptible-Infected-R
 
 The SIR model is governed by the following differential equations:
 
-```
-dS/dt = -c * S * I / N dI/dt = c * S * I / N - d * I
-dR/dt = d * I
-```
+- `dS/dt = -c * S * I / N` 
+- `dI/dt = c * S * I / N - d * I`
+- `dR/dt = d * I`
 
 Where:
 - **dS/dt**: Rate of change of susceptible population
