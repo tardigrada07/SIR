@@ -78,4 +78,5 @@ The program automatically generates a GnuPlot visualization showing:
 - Green line: Recovered population over time
 
 ![SIR Model Simulation Output](docs/sir.png)
+
 *Example output showing the classic SIR model behavior with infection spread and recovery rates*
