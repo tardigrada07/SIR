@@ -1,19 +1,19 @@
 /*
  ============================================================================
  Name        : SIR.c
- Author      :
+ Author      : tardigrada07
  Version     :
  Copyright   : MIT license
  Description : Kermack-McKendrick SIR in C, Ansi-style
  ============================================================================
 
- N = teljes populacio
- t = ido
- S = megfertozodni kepes populacio
- I = megfertozodott populacio
- R = fertozesen mar atesett, tovabb mar nem fertozo populacio (meghalt, meggyogyult)
- c = fertozesi rata
- d = fertozesen mar atesett, tovabb mar nem fertozo rata (meghalt, meggyogyult)
+ N = total population
+ t = time
+ S = susceptible population (capable of being infected)
+ I = infected population
+ R = recovered population, no longer infectious (died, recovered)
+ c = infection rate
+ d = recovery rate (died, recovered)
 
  */
 
@@ -22,18 +22,18 @@
 
 void draw(double c, double d) {
 	char buf[70], buf2[70];
-	sprintf(buf,  "set label 'Fertozes terjedesi sebessege (c): %.1f' at 5.5,7500", c);
-	sprintf(buf2, "set label 'Fertozesen ateses sebessege (d): %.1f' at 5.5,7100", d);
+	sprintf(buf,  "set label 'Infection spread rate (c): %.1f' at 5.5,7500", c);
+	sprintf(buf2, "set label 'Recovery rate (d): %.1f' at 5.5,7100", d);
 
-	char *cmdGnuplot [] = {"set title \"Kermack-McKendrick SIR szimulacio\"",
-	                       "set xlabel '---- Ido --->'",
-	                       "set ylabel '---- Populacio --->'",
+	char *cmdGnuplot [] = {"set title \"Kermack-McKendrick SIR simulation\"",
+	                       "set xlabel '---- Time --->'",
+	                       "set ylabel '---- Population --->'",
 						   buf, buf2,
-	                       "plot 'sir.txt' u 1:2 w l title 'Megfertozodni kepes (S)', \
-	                             'sir.txt' u 1:3 w l title 'Megfertozodott (I)', \
-	                             'sir.txt' u 1:4 w l title 'Fertozesen mar atesett (R)'"};
+	                       "plot 'sir.txt' u 1:2 w l title 'Susceptible (S)', \
+	                             'sir.txt' u 1:3 w l title 'Infected (I)', \
+	                             'sir.txt' u 1:4 w l title 'Recovered (R)'"};
 
-	// GnuPlot megnyitasa pipe IPC-vel
+	// open GnuPlot with pipe IPC-vel
 	FILE *GNUPLOT_Pipe = popen("gnuplot -persist", "w");
 	for (int i=0; i<6; i++) {
 		fprintf(GNUPLOT_Pipe, "%s \n", cmdGnuplot[i]);
@@ -41,7 +41,7 @@ void draw(double c, double d) {
 }
 
 int main(void) {
-	puts("Kermack-McKendrick SIR szimulacio");
+	puts("Kermack-McKendrick SIR simulation");
 
 	double N = 10000.0;
 	double S = 9000.0;
@@ -52,13 +52,13 @@ int main(void) {
 	double d = 0.2;
 	double scale = 0.1;
 
-	// szamitott adatok fajlba irasa
+	// writing to a file
 	FILE *f = fopen("sir.txt", "w");
 
 	puts("\nTime\tS\tI\tR");
 	for (int i=0; i<100; i++) {
-		printf("%.1f\t%.1f\t%.1f\t%.1f\n", t, S, I, R);		// console-ra iras
-		fprintf(f, "%.1f\t%.1f\t%.1f\t%.1f\n", t, S, I, R);	// fajlba iras
+		printf("%.1f\t%.1f\t%.1f\t%.1f\n", t, S, I, R);		// writing to console
+		fprintf(f, "%.1f\t%.1f\t%.1f\t%.1f\n", t, S, I, R);	// writing to a file
 
 		double dS = (-c * S * I) / N;
 		double dR = d * I;
